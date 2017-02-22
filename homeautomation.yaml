@@ -1,0 +1,25 @@
+---
+- hosts: localhost
+  tasks:
+  - name: remove disable serial line
+    lineinfile: dest=/boot/config.txt
+                regexp="enable_uart=0"
+                state=absent
+  - name: add enable serial line
+    lineinfile: dest=/boot/config.txt
+                line="enable_uart=1"
+  - name: python virtualenv
+    pip: name=virtualenv state=latest
+  - name: python3-dev
+    apt: name=python3-dev
+  - name: install circus in python3 virtualenv
+    pip:
+        name: circus
+        virtualenv: /opt/home_automation
+        virtualenv_python: python3.4
+  - name: install git
+    apt: name=git
+  - name: install code
+    git:
+        repo: https://github.com/geuben/push_pull.git
+        dest: /opt/home_automation/code/
